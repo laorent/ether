@@ -15,7 +15,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
 
   useEffect(() => {
     if (viewportRef.current) {
-      viewportRef.current.scrollTop = viewportRef.current.scrollHeight;
+      viewportRef.current.scrollTo({ top: viewportRef.current.scrollHeight, behavior: 'smooth' });
     }
   }, [messages, isLoading]);
 
