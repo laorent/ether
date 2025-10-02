@@ -7,10 +7,12 @@ if (!apiKey) {
 
 const genAI = new GoogleGenerativeAI(apiKey);
 
-// IMPORTANT: The model name is subject to change. Please refer to Google's documentation for the latest models.
-// As of late 2024, gemini-2.5-flash is a common choice for speed.
+// The model name is configurable via the GEMINI_MODEL environment variable.
+// It defaults to "gemini-2.5-flash" if the variable is not set.
+const modelName = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+
 const model = genAI.getGenerativeModel({
-  model: "gemini-2.5-flash",
+  model: modelName,
   // The 'google-search' tool is what enables grounding.
   tools: [{ "googleSearch": {} }],
 });
