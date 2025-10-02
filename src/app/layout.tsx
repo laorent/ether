@@ -4,7 +4,7 @@ import { ThemeProvider } from '@/components/providers/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'GeminiFlow',
+  title: 'Aether',
   description: 'A complete, deployable Gemini chatbot web application built with Next.js and TypeScript.',
 };
 

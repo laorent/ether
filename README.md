@@ -1,6 +1,6 @@
-# GeminiFlow
+# Aether
 
-GeminiFlow is a complete, deployable Gemini chatbot web application built with Next.js and TypeScript. It features a modern, responsive UI styled with TailwindCSS, and it's designed to be deployed directly to Vercel.
+Aether is a complete, deployable Gemini chatbot web application built with Next.js and TypeScript. It features a modern, responsive UI styled with TailwindCSS, and it's designed to be deployed directly to Vercel.
 
 ## Features
 
@@ -28,7 +28,7 @@ Follow these instructions to get the project running locally for development and
 
 ```bash
 git clone <repository-url>
-cd GeminiFlow
+cd Aether
 ```
 
 ### 2. Install dependencies

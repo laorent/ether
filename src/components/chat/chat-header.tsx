@@ -27,7 +27,7 @@ export function ChatHeader({ onClearChat }: ChatHeaderProps) {
       <div className="flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <Icons.Bot className="h-6 w-6 text-primary" />
-          <h1 className="text-lg font-semibold">GeminiFlow</h1>
+          <h1 className="text-lg font-semibold">Aether</h1>
         </div>
         <div className="flex items-center gap-2">
           <AlertDialog>
