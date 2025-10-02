@@ -34,8 +34,8 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
         ) : (
           <div className="flex h-full items-center justify-center">
             <div className="text-center text-muted-foreground">
-              <p>Start a conversation with Aether.</p>
-              <p className="text-sm">You can ask questions and upload images.</p>
+              <p>开始与 Aether 对话。</p>
+              <p className="text-sm">你可以提问或上传图片。</p>
             </div>
           </div>
         )}

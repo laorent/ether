@@ -32,23 +32,22 @@ export function ChatHeader({ onClearChat }: ChatHeaderProps) {
         <div className="flex items-center gap-2">
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="ghost" size="icon" title="Clear Chat">
+              <Button variant="ghost" size="icon" title="清除对话">
                 <Icons.Trash2 />
-                <span className="sr-only">Clear Chat</span>
+                <span className="sr-only">清除对话</span>
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                <AlertDialogTitle>确定吗？</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This will permanently clear the current chat history. This
-                  action cannot be undone.
+                  这将永久清除当前聊天记录。此操作无法撤销。
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel>取消</AlertDialogCancel>
                 <AlertDialogAction onClick={onClearChat}>
-                  Clear Chat
+                  清除对话
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

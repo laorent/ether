@@ -37,16 +37,16 @@ export default function ChatLayout() {
       if (selectedFile.size > MAX_FILE_SIZE) {
         toast({
           variant: "destructive",
-          title: "File is too large",
-          description: `Please select a file smaller than ${MAX_FILE_SIZE / 1024 / 1024} MB.`,
+          title: "文件太大",
+          description: `请选择小于 ${MAX_FILE_SIZE / 1024 / 1024} MB 的文件。`,
         });
         return;
       }
       if (!ALLOWED_FILE_TYPES.includes(selectedFile.type)) {
         toast({
           variant: "destructive",
-          title: "Invalid file type",
-          description: "Please select a JPEG, PNG, WEBP, or GIF image.",
+          title: "文件类型无效",
+          description: "请选择 JPEG, PNG, WEBP, 或 GIF 图片。",
         });
         return;
       }
@@ -69,8 +69,8 @@ export default function ChatLayout() {
     setSessionId(newSessionId);
     localStorage.setItem("sessionId", newSessionId);
     toast({
-        title: "Chat cleared",
-        description: "A new chat session has started.",
+        title: "聊天已清除",
+        description: "新的聊天会话已开始。",
     });
   };
 
@@ -95,11 +95,11 @@ export default function ChatLayout() {
         await sendMessage(newParts);
       };
       reader.onerror = (error) => {
-        console.error("Error reading file:", error);
+        console.error("读取文件时出错:", error);
         toast({
           variant: "destructive",
-          title: "Error reading file",
-          description: "Could not process the selected file.",
+          title: "读取文件时出错",
+          description: "无法处理所选文件。",
         });
         setIsLoading(false);
       };
@@ -145,7 +145,7 @@ export default function ChatLayout() {
 
       if (!res.ok || !res.body) {
         const errorData = await res.json();
-        throw new Error(errorData.error || "An unknown error occurred.");
+        throw new Error(errorData.error || "发生未知错误。");
       }
       
       const reader = res.body.getReader();
@@ -201,7 +201,7 @@ export default function ChatLayout() {
         setMessages((prev) => prev.filter(msg => msg.id !== modelMessageId));
         toast({
           variant: "destructive",
-          title: "An error occurred",
+          title: "发生错误",
           description: error.message,
         });
       }

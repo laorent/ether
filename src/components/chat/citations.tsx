@@ -24,8 +24,8 @@ export function Citations({ citations }: CitationsProps) {
     const textToCopy = citations.map((c, i) => `[${i+1}] ${c.title}\n${c.uri}`).join('\n\n');
     navigator.clipboard.writeText(textToCopy);
     toast({
-      title: 'Citations Copied',
-      description: 'The citation sources have been copied to your clipboard.',
+      title: '引文已复制',
+      description: '引文来源已复制到剪贴板。',
     });
   }
 
@@ -38,12 +38,12 @@ export function Citations({ citations }: CitationsProps) {
       <div className="flex items-center justify-between">
         <CollapsibleTrigger asChild>
           <Button variant="ghost" size="sm" className="p-1 h-auto text-xs">
-            {isOpen ? 'Hide' : 'Show'} {citations.length} Sources
+            {isOpen ? '隐藏' : '显示'} {citations.length} 个来源
           </Button>
         </CollapsibleTrigger>
         <Button variant="ghost" size="icon" className="h-6 w-6" onClick={copyCitations}>
             <Icons.Copy className="h-3 w-3" />
-            <span className="sr-only">Copy Citations</span>
+            <span className="sr-only">复制引文</span>
         </Button>
       </div>
       <CollapsibleContent className="space-y-2">

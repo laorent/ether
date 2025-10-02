@@ -72,7 +72,7 @@ export function ChatInput({
                     </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                    <p>Attach an image</p>
+                    <p>附上图片</p>
                 </TooltipContent>
             </Tooltip>
         </TooltipProvider>
@@ -88,7 +88,7 @@ export function ChatInput({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Ask anything..."
+          placeholder="问任何问题..."
           className="min-h-12 w-full resize-none rounded-lg border-input bg-background pl-12 pr-20 py-3 text-base scroll-py-3"
           rows={1}
         />
@@ -96,12 +96,12 @@ export function ChatInput({
           {isLoading ? (
             <Button type="button" size="icon" onClick={stop}>
               <Icons.X className="h-5 w-5" />
-              <span className="sr-only">Stop</span>
+              <span className="sr-only">停止</span>
             </Button>
           ) : (
             <Button type="submit" size="icon" disabled={!input.trim() && !file}>
               <Icons.Send className="h-5 w-5" />
-              <span className="sr-only">Send</span>
+              <span className="sr-only">发送</span>
             </Button>
           )}
         </div>
