@@ -28,7 +28,7 @@ Aether 是一个完整、可部署的 Gemini 聊天机器人 Web 应用程序，
 ### 1. 克隆仓库
 
 ```bash
-git clone <repository-url>
+git clone [<repository-url>](https://github.com/laorent/ether.git)
 cd Aether
 ```
 
