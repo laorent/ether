@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import type { ChatMessage } from '@/lib/types';
 import { Button } from '../ui/button';
 import { useToast } from '@/hooks/use-toast';
+import React from 'react';
 
 interface MessageProps {
   message: ChatMessage;
@@ -18,12 +19,20 @@ export function Message({ message, isLast, isLoading }: MessageProps) {
   const { role, parts } = message;
   const isModel = role === 'model';
   const { toast } = useToast();
+  const contentRef = React.useRef<HTMLDivElement>(null);
 
   const onCopy = () => {
-    const textToCopy = parts
-      .filter(part => part.type === 'text')
-      .map(part => part.text)
-      .join('\n');
+    let textToCopy = '';
+    if (contentRef.current) {
+      // Prefer innerText to get the rendered text content without HTML tags
+      textToCopy = contentRef.current.innerText;
+    } else {
+      // Fallback for an unlikely case where ref is not attached
+      textToCopy = parts
+        .filter(part => part.type === 'text')
+        .map(part => part.text)
+        .join('\\n');
+    }
     
     if (textToCopy) {
       navigator.clipboard.writeText(textToCopy);
@@ -84,6 +93,7 @@ export function Message({ message, isLast, isLoading }: MessageProps) {
                 )}
                 <CardContent className="p-3">
                     <div
+                        ref={contentRef}
                         className="prose prose-sm dark:prose-invert"
                         dangerouslySetInnerHTML={{ __html: part.text }}
                     />
