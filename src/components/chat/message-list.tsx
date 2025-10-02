@@ -12,11 +12,16 @@ interface MessageListProps {
 
 export function MessageList({ messages, isLoading }: MessageListProps) {
   const viewportRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   useEffect(() => {
-    if (viewportRef.current) {
-      viewportRef.current.scrollTo({ top: viewportRef.current.scrollHeight, behavior: 'smooth' });
-    }
+    scrollToBottom();
   }, [messages, isLoading]);
 
   return (
@@ -39,6 +44,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
             </div>
           </div>
         )}
+        <div ref={messagesEndRef} />
       </div>
     </ScrollArea>
   );
