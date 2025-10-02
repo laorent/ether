@@ -43,6 +43,16 @@ export function Message({ message, isLast, isLoading }: MessageProps) {
     }
   };
 
+  // Function to clean markdown-like characters
+  const cleanText = (text: string) => {
+    // Removes **, *, and list-like prefixes
+    return text
+      .replace(/\*\*/g, '')
+      .replace(/ \*/g, '\n') // Keep line breaks for lists
+      .replace(/^\*/g, '')  // For lists at the beginning
+      .trim();
+  };
+
   return (
     <div className={cn('group/message flex items-start gap-3 mb-6', !isModel && 'justify-end')}>
       {isModel && (
@@ -72,6 +82,9 @@ export function Message({ message, isLast, isLoading }: MessageProps) {
               )
             }
             if (isEmpty && !showLoader) return null;
+            
+            const cleanedText = cleanText(part.text);
+
             return (
               <Card
                 key={index}
@@ -95,7 +108,7 @@ export function Message({ message, isLast, isLoading }: MessageProps) {
                     <div
                         ref={contentRef}
                         className="prose prose-sm dark:prose-invert"
-                        dangerouslySetInnerHTML={{ __html: part.text }}
+                        dangerouslySetInnerHTML={{ __html: cleanedText }}
                     />
                     {isModel && isLast && isLoading && <span className="inline-block h-4 w-1 animate-pulse bg-foreground/50 ml-1"></span>}
                 </CardContent>
