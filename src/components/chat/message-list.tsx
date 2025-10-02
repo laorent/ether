@@ -11,7 +11,6 @@ interface MessageListProps {
 }
 
 export function MessageList({ messages, isLoading }: MessageListProps) {
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -21,7 +20,7 @@ export function MessageList({ messages, isLoading }: MessageListProps) {
   }, [messages, isLoading]);
 
   return (
-    <ScrollArea className="flex-1" ref={scrollAreaRef} viewportRef={viewportRef}>
+    <ScrollArea className="flex-1" viewportRef={viewportRef}>
       <div className="p-4 sm:p-6">
         {messages.length > 0 ? (
           messages.map((message, index) => (
