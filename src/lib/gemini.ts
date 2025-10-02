@@ -8,9 +8,9 @@ if (!apiKey) {
 const genAI = new GoogleGenerativeAI(apiKey);
 
 // IMPORTANT: The model name is subject to change. Please refer to Google's documentation for the latest models.
-// As of late 2024, gemini-1.5-flash-latest is a common choice for speed.
+// As of late 2024, gemini-2.5-flash is a common choice for speed.
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash-latest",
+  model: "gemini-2.5-flash",
   // The 'google-search' tool is what enables grounding.
   tools: [{ "googleSearch": {} }],
 });
