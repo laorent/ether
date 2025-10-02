@@ -5,6 +5,8 @@ import { Icons } from '@/components/icons';
 import { Citations } from './citations';
 import { cn } from '@/lib/utils';
 import type { ChatMessage } from '@/lib/types';
+import { Button } from '../ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 interface MessageProps {
   message: ChatMessage;
@@ -15,9 +17,25 @@ interface MessageProps {
 export function Message({ message, isLast, isLoading }: MessageProps) {
   const { role, parts } = message;
   const isModel = role === 'model';
+  const { toast } = useToast();
+
+  const onCopy = () => {
+    const textToCopy = parts
+      .filter(part => part.type === 'text')
+      .map(part => part.text)
+      .join('\n');
+    
+    if (textToCopy) {
+      navigator.clipboard.writeText(textToCopy);
+      toast({
+        title: '已复制',
+        description: '内容已复制到剪贴板。',
+      });
+    }
+  };
 
   return (
-    <div className={cn('group flex items-start gap-3 mb-6', !isModel && 'justify-end')}>
+    <div className={cn('group/message flex items-start gap-3 mb-6', !isModel && 'justify-end')}>
       {isModel && (
         <Avatar className="h-8 w-8 shrink-0">
           <AvatarFallback><Icons.Bot /></AvatarFallback>
@@ -49,10 +67,21 @@ export function Message({ message, isLast, isLoading }: MessageProps) {
               <Card
                 key={index}
                 className={cn(
-                  "w-fit rounded-lg whitespace-pre-wrap",
+                  "relative w-fit rounded-lg whitespace-pre-wrap",
                   isModel ? 'bg-secondary' : 'bg-primary text-primary-foreground'
                 )}
               >
+                {isModel && !isLoading && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-1 right-1 h-7 w-7 opacity-0 transition-opacity group-hover/message:opacity-100"
+                    onClick={onCopy}
+                    title="复制"
+                  >
+                    <Icons.Copy className="h-4 w-4" />
+                  </Button>
+                )}
                 <CardContent className="p-3">
                     <div
                         className="prose prose-sm dark:prose-invert"
