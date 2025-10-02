@@ -8,10 +8,15 @@ import { useToast } from "@/hooks/use-toast";
 import { ChatHeader } from "./chat-header";
 import { MessageList } from "./message-list";
 import { ChatInput } from "./chat-input";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Icons } from "../icons";
 
 // Maximum size for image uploads (8 MB)
 const MAX_FILE_SIZE = 8 * 1024 * 1024;
 const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+const ACCESS_TOKEN_KEY = "aether-access-token";
 
 export default function ChatLayout() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -19,12 +24,47 @@ export default function ChatLayout() {
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [sessionId, setSessionId] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isPasswordProtected, setIsPasswordProtected] = useState<boolean | null>(null);
+  const [accessPassword, setAccessPassword] = useState("");
+  const [isVerifying, setIsVerifying] = useState(true);
   const abortControllerRef = useRef<AbortController | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
-    setSessionId(localStorage.getItem("sessionId") || `session-${uuidv4()}`);
+    const checkPasswordProtection = async () => {
+      try {
+        const response = await fetch('/api/verify-password');
+        const data = await response.json();
+        setIsPasswordProtected(data.isPasswordProtected);
+
+        if (!data.isPasswordProtected) {
+          setIsAuthenticated(true);
+        } else {
+          // Check if user is already authenticated from a previous session
+          const storedToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+          if (storedToken) {
+              // You might want to add an extra verification step here
+              // For simplicity, we trust the token.
+              setIsAuthenticated(true);
+          }
+        }
+      } catch (error) {
+        console.error("无法检查密码保护状态:", error);
+        // Fallback to not protected if API fails
+        setIsAuthenticated(true); 
+      } finally {
+        setIsVerifying(false);
+      }
+    };
+    checkPasswordProtection();
   }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      setSessionId(localStorage.getItem("sessionId") || `session-${uuidv4()}`);
+    }
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (sessionId) {
@@ -210,6 +250,68 @@ export default function ChatLayout() {
       abortControllerRef.current = null;
     }
   };
+
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/verify-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: accessPassword }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          localStorage.setItem(ACCESS_TOKEN_KEY, 'true'); // Store a simple token
+          setIsAuthenticated(true);
+        } else {
+          toast({ variant: 'destructive', title: '密码错误', description: '请输入正确的访问密码。' });
+        }
+      } else {
+        toast({ variant: 'destructive', title: '验证失败', description: '无法验证密码，请稍后重试。' });
+      }
+    } catch (error) {
+      toast({ variant: 'destructive', title: '发生错误', description: '网络错误，请检查您的连接。' });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
+  if (isVerifying) {
+    return (
+        <div className="flex h-full w-full items-center justify-center">
+            <Icons.Loader className="h-8 w-8 animate-spin" />
+        </div>
+    )
+  }
+
+  if (!isAuthenticated && isPasswordProtected) {
+    return (
+      <div className="flex h-full w-full items-center justify-center bg-background">
+        <Card className="w-full max-w-sm">
+          <CardHeader>
+            <CardTitle className="text-center">需要访问密码</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handlePasswordSubmit} className="flex flex-col gap-4">
+              <Input
+                type="password"
+                placeholder="请输入密码..."
+                value={accessPassword}
+                onChange={(e) => setAccessPassword(e.target.value)}
+                disabled={isLoading}
+              />
+              <Button type="submit" disabled={isLoading || !accessPassword}>
+                {isLoading ? <Icons.Loader className="animate-spin" /> : '进入'}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="relative flex w-full max-w-4xl flex-1 flex-col rounded-lg border bg-card shadow-sm">
