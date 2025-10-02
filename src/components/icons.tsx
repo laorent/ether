@@ -9,6 +9,7 @@ import {
   X,
   Loader,
   Copy,
+  LogOut,
 } from 'lucide-react';
 
 export const Icons = {
@@ -22,4 +23,5 @@ export const Icons = {
   X,
   Loader,
   Copy,
+  LogOut,
 };

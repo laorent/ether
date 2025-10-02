@@ -16,7 +16,7 @@ import { Icons } from "../icons";
 // Maximum size for image uploads (8 MB)
 const MAX_FILE_SIZE = 8 * 1024 * 1024;
 const ALLOWED_FILE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-const ACCESS_TOKEN_KEY = "aether-access-token";
+const ACCESS_PASSWORD_KEY = "aether-access-password";
 
 export default function ChatLayout() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -32,32 +32,44 @@ export default function ChatLayout() {
   const { toast } = useToast();
 
   useEffect(() => {
-    const checkPasswordProtection = async () => {
-      try {
-        const response = await fetch('/api/verify-password');
-        const data = await response.json();
-        setIsPasswordProtected(data.isPasswordProtected);
+    const checkAuth = async () => {
+        setIsVerifying(true);
+        try {
+            const response = await fetch('/api/verify-password');
+            const data = await response.json();
+            setIsPasswordProtected(data.isPasswordProtected);
 
-        if (!data.isPasswordProtected) {
-          setIsAuthenticated(true);
-        } else {
-          // Check if user is already authenticated from a previous session
-          const storedToken = localStorage.getItem(ACCESS_TOKEN_KEY);
-          if (storedToken) {
-              // You might want to add an extra verification step here
-              // For simplicity, we trust the token.
-              setIsAuthenticated(true);
-          }
+            if (!data.isPasswordProtected) {
+                setIsAuthenticated(true);
+            } else {
+                const storedPassword = localStorage.getItem(ACCESS_PASSWORD_KEY);
+                if (storedPassword) {
+                    // Re-verify the stored password on every load for better security
+                    const verifyResponse = await fetch('/api/verify-password', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ password: storedPassword }),
+                    });
+                    if (verifyResponse.ok) {
+                        setIsAuthenticated(true);
+                    } else {
+                        // Password is old or invalid, clear it
+                        localStorage.removeItem(ACCESS_PASSWORD_KEY);
+                        setIsAuthenticated(false);
+                    }
+                } else {
+                    setIsAuthenticated(false);
+                }
+            }
+        } catch (error) {
+            console.error("无法检查密码保护状态:", error);
+            // Fallback to not protected if API fails, allowing access.
+            setIsAuthenticated(true);
+        } finally {
+            setIsVerifying(false);
         }
-      } catch (error) {
-        console.error("无法检查密码保护状态:", error);
-        // Fallback to not protected if API fails
-        setIsAuthenticated(true); 
-      } finally {
-        setIsVerifying(false);
-      }
     };
-    checkPasswordProtection();
+    checkAuth();
   }, []);
 
   useEffect(() => {
@@ -111,6 +123,16 @@ export default function ChatLayout() {
     toast({
         title: "聊天已清除",
         description: "新的聊天会话已开始。",
+    });
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem(ACCESS_PASSWORD_KEY);
+    setIsAuthenticated(false);
+    setAccessPassword("");
+    toast({
+        title: "已退出",
+        description: "您已成功退出。",
     });
   };
 
@@ -264,7 +286,7 @@ export default function ChatLayout() {
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
-          localStorage.setItem(ACCESS_TOKEN_KEY, 'true'); // Store a simple token
+          localStorage.setItem(ACCESS_PASSWORD_KEY, accessPassword); 
           setIsAuthenticated(true);
         } else {
           toast({ variant: 'destructive', title: '密码错误', description: '请输入正确的访问密码。' });
@@ -315,7 +337,7 @@ export default function ChatLayout() {
 
   return (
     <div className="relative flex h-full w-full max-w-4xl flex-col rounded-lg border bg-card shadow-sm">
-      <ChatHeader onClearChat={handleClearChat} />
+      <ChatHeader onClearChat={handleClearChat} onLogout={handleLogout} />
       <div className="flex-1 overflow-y-auto h-0">
         <MessageList messages={messages} isLoading={isLoading} />
       </div>

@@ -19,9 +19,10 @@ import { Icons } from "../icons";
 
 interface ChatHeaderProps {
   onClearChat: () => void;
+  onLogout: () => void;
 }
 
-export function ChatHeader({ onClearChat }: ChatHeaderProps) {
+export function ChatHeader({ onClearChat, onLogout }: ChatHeaderProps) {
   return (
     <>
       <div className="flex h-16 items-center justify-between px-4">
@@ -53,6 +54,10 @@ export function ChatHeader({ onClearChat }: ChatHeaderProps) {
             </AlertDialogContent>
           </AlertDialog>
           <ThemeToggle />
+          <Button variant="ghost" size="icon" title="退出登录" onClick={onLogout}>
+            <Icons.LogOut />
+            <span className="sr-only">退出登录</span>
+          </Button>
         </div>
       </div>
       <Separator />
