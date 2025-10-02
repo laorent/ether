@@ -314,9 +314,11 @@ export default function ChatLayout() {
   }
 
   return (
-    <div className="relative flex w-full max-w-4xl flex-1 flex-col rounded-lg border bg-card shadow-sm">
+    <div className="relative flex h-full w-full max-w-4xl flex-col rounded-lg border bg-card shadow-sm">
       <ChatHeader onClearChat={handleClearChat} />
-      <MessageList messages={messages} isLoading={isLoading} />
+      <div className="flex-1 overflow-y-auto h-0">
+        <MessageList messages={messages} isLoading={isLoading} />
+      </div>
       <div className="mx-2 mb-2 rounded-lg border bg-background p-2 sm:p-4">
         <ChatInput
           input={input}
