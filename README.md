@@ -1,6 +1,7 @@
 # Aether
 
 Aether 是一个完整、可部署的 Gemini 聊天机器人 Web 应用程序，使用 Next.js 和 TypeScript 构建。它具有使用 TailwindCSS 设计的现代化、响应式用户界面，并且可以直接部署到 Vercel。
+<img width="893" height="908" alt="image" src="https://github.com/user-attachments/assets/97ad0c53-ab8f-4946-b45e-859e49d01371" />
 
 ## 功能特性
 
