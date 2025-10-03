@@ -89,5 +89,5 @@ npm run dev
 3.  **设置环境变量**: 在您的 Vercel 项目仪表板中，转到 `Settings > Environment Variables` 并添加您的环境变量。
     -   `GEMINI_API_KEY`: 您的 Google AI API 密钥。
     -   `AETHER_PASSWORD`: (可选) 设置一个访问密码。
-    -   `GEMINI_MODEL`: (可选) 指定要使用的 Gemini 模型，例如 `gemini-pro-vision`。
+    -   `GEMINI_MODEL`: (可选) 指定要使用的 Gemini 模型，例如 `gemini-2.5-pro`。
 4.  **部署**。Vercel 会自动检测到您正在使用 Next.js，并处理构建和部署过程。
